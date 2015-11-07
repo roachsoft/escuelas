@@ -6,25 +6,29 @@ class Ind_asist extends CI_Controller {
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('FonsoftModel');
+        $this->load->model('Ind_asistModel');
     }
 
     function index()
     {
-        $this->load->view('/ind_asistencia/index.php');
+        $data = array();
+        $data['periodos'] = $this->Ind_asistModel->getAllPeriods();
+        $data['cursos'] = $this->Ind_asistModel->getAllClassroom();
+        $data['actividad'] = $this->Ind_asistModel->getAllActivities();
+
+        $this->load->view('/ind_asistencia/index.php', $data);
     }
 
-    public function getFilterIndAsistencia($mes=10, $periodo=2015, $aula=18, $actividad=1)
+    public function getFilterIndAsistencia()
     {
-
-        $mes=$_POST['periodo_lectivo'];
-        $periodo=$_POST['mes'];
+        $periodo=$_POST['periodo_lectivo'];
+        $mes=$_POST['mes'];
         $aula=$_POST['curso'];
         $actividad=$_POST['actividad'];
 
-        $total = $this->FonsoftModel->totalregistros($mes, $periodo, $aula, $actividad);
+        $data['totalRegistros'] = $this->Ind_asistModel->TotalRegistros($mes, $periodo, $aula, $actividad);
 
-        var_dump($total);
+        
 
         return json_encode($_POST);
     }

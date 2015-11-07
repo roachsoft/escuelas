@@ -1,4 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,7 +29,6 @@
 <body>
 <div class="row">
     <div class="col-md-12">
-    
         <h3>Módulo Indicador de asistencia</h3>
     </div>
 </div>
@@ -36,24 +37,19 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default" style="padding-top: 15px; padding-left: 15px; padding-bottom: 15px;">
-                <form class="form-inline">
+                <div class="form-inline">
                     <div class="form-group">
                             <label for="exampleInputName2">Periodo Lectivo: </label>
                             <select class="form-control" id="select_periodo_lectivo">
-                                <option value="2000">2000</option>
-                                <option value="2001">2001</option>
-                                <option value="2002">2002</option>
-                                <option value="2003">2003</option>
-                                <option value="2003">2004</option>
-                                <option value="2003">2005</option>
-                                <option value="2003">2006</option>
-                                <option value="2003">2007</option>
-                                <option value="2003">2008</option>
-                                <option value="2003">2009</option>
-                                <option value="2003">2010</option>
-                                <option value="2003">2011</option>
-                                <option value="2003">2012</option>
-                                <option value="2003">2013</option>
+                            
+
+                                <?php
+                                foreach ($periodos as $key => $value) {
+                                    ?>
+                                    <option value="<?php echo $key;?>"><?php echo $value; ?></option>
+                                    <?php
+                                }
+                                ?>
                             </select>
                         </div>
                         <div class="form-group">
@@ -76,28 +72,36 @@
                         <div class="form-group">
                             <label for="selectCurse">Grado / Curso: </label>
                             <select class="form-control" id="select_curso">
-                                <option value="-1">Todos</option>
-                                <option value="1">Primero</option>
-                                <option value="2">Segundo</option>
-                                <option value="3">Tercero</option>
-                                <option value="4">Cuarto</option>
-                                <option value="5">Quinto</option>
+
+
+                                <?php
+                                foreach ($cursos as $value) {
+                                    ?>
+                                    <option value="<?php echo $value['id'];?>"><?php echo $value['name']; ?></option>
+                                    <?php
+                                }
+                                ?>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail2">Actividad: </label>
                         
                             <select class="form-control" id="select_actividad">
-                                <option value="-1">Todos</option>
-                                <option value="1">Clases</option>
-                                <option value="2">Taller</option>
+                                <?php
+                                foreach ($actividad as $value) {
+                                    ?>
+                                    <option value="<?php echo $value['id'];?>"><?php echo $value['name']; ?></option>
+                                    <?php
+                                }
+                                ?>
                             </select>
                         </div>
                         <div class="form-group">
                             <button id="generar_grafico" class="btn btn-default">Generar Gr&aacute;fico</button>
 
                         </div>
-                    </form>
+                    </div>
+
             </div>
         </div>
     </div>
