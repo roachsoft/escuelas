@@ -83,6 +83,7 @@ EOQ;
 	public function getAllPeriods()
 	{
 		$data = array(
+			'2012' => '2012'
 			'2013' => '2013',
 			'2014' => '2014',
 			'2015' => '2015'
