@@ -71,14 +71,11 @@ EOQ;
 
 	public function getAllPeriods()
 	{
-		$data = array(
-			'2013' => '2013',
-			'2014' => '2014',
-			'2015' => '2015'
-		);
-
-		return $data;
+		$qsql = "select distinct(ins_per_lectivo) from inscripcion";
+		$query = $this->db->query($qsql);
+		return $query->row_array();
 	}
+
 
 	public function getAllClassroom()
 	{
