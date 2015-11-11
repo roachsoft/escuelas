@@ -165,6 +165,7 @@
         $('#generar_grafico').on('click', function() {
 
             var labels = [];
+            var name_of_curse = [];
 
             if ($('#select_curso').val() === '-') {
                 
@@ -172,12 +173,12 @@
                 for (i = 0; i < x.length; i++) {
                     if (i > 0) {
                         labels.push(x.options[i].value);
+                        name_of_curse.push($("#select_curso option[value='"+i+"']").text());
                     }
                 }
-                console.log('All Values: '+labels);
             } else {
-                labels.push($('#select_curso').val());
-                console.log('Un solo curso: '+labels);
+                name_of_curse.push($("#select_curso option[value='"+$('#select_curso ').val()+"']").text());
+                labels.push($('#select_curso ').text());
             }
             
             var url=base_url+'/ind_asist/getFilterIndAsistencia';
@@ -192,21 +193,26 @@
             dataFilter.actividad       = $('#select_actividad').val(); // getValueSelected('select_actividad');
             dataFilter.curso           = $('#select_curso').val(); // getValueSelected('select_curso');
 
+            var arrayPresentes = [];
+            var arrayAusentes  = [];
+            var arrayTardanza  = [];
+
             $.ajax({
-              type: "POST",
-              url: url,
-              data: dataFilter,
-              dataType: "JSON",
-              success: function(data) {
-                    $.each(function(i, value) {
-                        
-                    })
+                type: "POST",
+                url: url,
+                data: dataFilter,
+                dataType: "JSON",
+                success: function(data) {
                     console.log(data);
-              },
+                },
             });
 
+            // console.log('arrayPresentes : '+arrayPresentes);
+            // console.log('arrayAusentes : '+arrayAusentes);
+            // console.log('arrayTardanza : '+arrayTardanza);
+
             var data = {
-            labels: labels,
+            labels: name_of_curse,
                 datasets: [
                     {
                         label: "Indicador de asistencia",
@@ -214,7 +220,7 @@
                         strokeColor: "rgba(220,220,220,0.8)",
                         highlightFill: "rgba(220,220,220,0.75)",
                         highlightStroke: "rgba(220,220,220,1)",
-                        data: [65, 59, 80, 81, 56, 55, 40]
+                        data: [1,1,1,1] // arrayPresentes
                     },
                     {
                         label: "My Second dataset",
@@ -222,7 +228,15 @@
                         strokeColor: "rgba(151,187,205,0.8)",
                         highlightFill: "rgba(151,187,205,0.75)",
                         highlightStroke: "rgba(151,187,205,1)",
-                        data: [28, 48, 40, 19, 86, 27, 90]
+                        data: [1,1,1,1] // arrayTardanza
+                    },
+                    {
+                        label: "My Second dataset",
+                        fillColor: "rgba(151,187,205,0.5)",
+                        strokeColor: "rgba(151,187,205,0.8)",
+                        highlightFill: "rgba(151,187,205,0.75)",
+                        highlightStroke: "rgba(151,187,205,1)",
+                        data: [1,1,1,1] // arrayAusentes
                     }
                 ]
             };

@@ -31,21 +31,26 @@ class Ind_asist extends CI_Controller {
         $totalTardanza = 0;
 
         $data['totalRegistros'] = $this->Ind_asistModel->totalRegistros($mes, $periodo, $aula, $actividad);
+        $row['Tardanza'] = array();
+        $row['Ausente'] = array();
+        $row['Presente'] = array();
 
-        foreach ($data['totalRegistros'] as $key => $value) {
-            switch ($value['tipasi_descripcion']) {
-                case 'Tardanza':
-                    $totalTardanza++;
-                    break;
-                case 'Presente':
-                    $totalPresente++;
-                    break;
-                case 'Ausente':
-                    $totalAusentes++;
-                    break;
-            }
+        foreach ($data['totalRegistros'] as $value) {
+            $row[$value['tipasi_descripcion']][$value['aul_id']][] = $value['count'];
         }
 
-        echo json_encode($data['totalRegistros']);
+        if (count($row['Tardanza']) == 0) {
+            $row['Tardanza'][] = 0;
+        }
+
+        if (count($row['Ausente']) == 0) {
+            $row['Ausente'][] = 0;
+        }
+
+        if (count($row['Presente']) == 0) {
+            $row['Presente'][] = 0;
+        }
+
+        echo json_encode($row);
     }
 }

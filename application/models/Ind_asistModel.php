@@ -37,12 +37,10 @@ Class Ind_asistModel extends CI_Model
 		}
 
 		$sql = <<<EOQ
-select asist.asi_id,
-       alu.alu_id,
-       tip_asist.tipasi_descripcion,
-       count(asist.asi_id),
-       count(alu.alu_id),
-       count(mot.mot_descripcion)
+select tip_asist.tipasi_descripcion,
+       inscrip.aul_id,
+       count(tip_asist.tipasi_descripcion),
+       count(inscrip.aul_id)
   from asistencia asist
   join alumno alu
        on alu.alu_id = asist.alu_id
@@ -58,7 +56,8 @@ where 1=1
   {$sqlMes}
   {$sqlPeriodo}
   {$sqlAula}
-  group by asist.asi_id, alu.alu_id, tip_asist.tipasi_descripcion, act.act_descripcion
+  group by tip_asist.tipasi_descripcion, inscrip.aul_id
+  order by inscrip.aul_id
 EOQ;
 
 		
