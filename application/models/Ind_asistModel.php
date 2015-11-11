@@ -5,7 +5,7 @@ Class Ind_asistModel extends CI_Model
 	{
 		$this->load->database();
 	}
-	public function TotalRegistros($mes, $periodo, $aula, $actividad)
+	public function totalRegistros($mes, $periodo, $aula, $actividad)
 	{
 		/*
 		* Valores por defecto, donde en $actividad corresponde segun la tabla de la bbdd
@@ -20,59 +20,47 @@ Class Ind_asistModel extends CI_Model
 		$sqlAula = "";
 		$sqlActividad = "";
 
-		if (!empty($mes) && $mes != '-1') {
-			$sqlMes = " AND extract(month from asistencia.asi_fecha)= ".$mes;
+		if (!empty($mes) && $mes != '-') {
+			$sqlMes = " AND extract(month from asist.asi_fecha) = ".$mes;
 		}
 
-		if (!empty($periodo) && $periodo != '-1') {
-			$sqlPeriodo = " inscripcion.ins_per_lectivo= ".$periodo;
-		} else {
-			$sqlPeriodo = " 1=1 ";
+		if (!empty($periodo) && $periodo != '-') {
+			$sqlPeriodo = " AND inscrip.ins_per_lectivo = ".$periodo;
 		}
 
-		if (!empty($aula) && $aula != '-1') {
-			$sqlAula = " AND inscripcion.aul_id= ".$aula;
-		} else {
-			$sqlAula = " AND inscripcion.aul_id= 18 ";
+		if (!empty($aula) && $aula != '-') {
+			$sqlAula = " AND inscrip.aul_id = ".$aula;
 		}
 
-		if (!empty($actividad) && $actividad != '-1') {
+		if (!empty($actividad) && $actividad != '-') {
 			$sqlActividad = " AND asistencia.act_id = ".$actividad;
 		}
 
 		$sql = <<<EOQ
-SELECT tipasi_descripcion, 
-       total, 
-       ROUND(total::numeric*100/total_general::numeric) AS porcentaje 
-FROM (
-      SELECT COUNT(*) as total, 
-             tipasi_descripcion, 
-             (SELECT count(*) 
-                FROM (SELECT merge.alu_id, 
-                             ta.tipasi_descripcion 
-                        FROM tipo_asistencia ta,
-                             (SELECT asistencia.*, 
-                                     a.usr_id 
-                                FROM asistencia 
-                                JOIN inscripcion ON (asistencia.ins_id = inscripcion.ins_id) 
-                               WHERE 1=1
-                                 {$sqlMes} AND ({$sqlPeriodo} {$sqlAula}) 
-                                 {$sqlActividad}) merge 
-                         WHERE ta.tipasi_id = merge.tipasi_id) tablatest) AS total_general 
-      FROM (SELECT merge.alu_id, 
-                   ta.tipasi_descripcion 
-              FROM tipo_asistencia ta,
-                   (SELECT asistencia.*, 
-                           inscripcion.usr_id 
-                      FROM asistencia JOIN inscripcion ON (asistencia.ins_id = inscripcion.ins_id)
-                     WHERE 1=1
-                       {$sqlMes} 
-                       AND ({$sqlPeriodo} {$sqlAula}) 
-                       {$sqlActividad}) merge 
-      WHERE ta.tipasi_id = merge.tipasi_id) test 
-      GROUP BY tipasi_descripcion) AS foo
+select tip_asist.tipasi_descripcion,
+       inscrip.aul_id,
+       count(tip_asist.tipasi_descripcion),
+       count(inscrip.aul_id)
+  from asistencia asist
+  join alumno alu
+       on alu.alu_id = asist.alu_id
+  join inscripcion inscrip
+       on inscrip.alu_id = alu.alu_id
+  join actividad act
+       on act.act_id = asist.act_id
+  join motivo mot
+       on mot.mot_id = asist.mot_id
+  join tipo_asistencia tip_asist
+       on tip_asist.tipasi_id = asist.tipasi_id
+where 1=1
+  {$sqlMes}
+  {$sqlPeriodo}
+  {$sqlAula}
+  group by tip_asist.tipasi_descripcion, inscrip.aul_id
+  order by inscrip.aul_id
 EOQ;
 
+		
 		$data = $this->db->query($sql);
 		$data = $data->result_array();
 
@@ -82,14 +70,11 @@ EOQ;
 
 	public function getAllPeriods()
 	{
-		$data = array(
-			'2013' => '2013',
-			'2014' => '2014',
-			'2015' => '2015'
-		);
-
-		return $data;
+		$qsql = "select distinct(ins_per_lectivo) from inscripcion";
+		$query = $this->db->query($qsql);
+		return $query->row_array();
 	}
+
 
 	public function getAllClassroom()
 	{

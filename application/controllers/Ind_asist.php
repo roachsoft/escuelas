@@ -26,10 +26,31 @@ class Ind_asist extends CI_Controller {
         $aula=$_POST['curso'];
         $actividad=$_POST['actividad'];
 
-        $data['totalRegistros'] = $this->Ind_asistModel->TotalRegistros($mes, $periodo, $aula, $actividad);
+        $totalAusentes = 0;
+        $totalPresente = 0;
+        $totalTardanza = 0;
 
-        
+        $data['totalRegistros'] = $this->Ind_asistModel->totalRegistros($mes, $periodo, $aula, $actividad);
+        $row['Tardanza'] = array();
+        $row['Ausente'] = array();
+        $row['Presente'] = array();
 
-        return json_encode($_POST);
+        foreach ($data['totalRegistros'] as $value) {
+            $row[$value['tipasi_descripcion']][$value['aul_id']][] = $value['count'];
+        }
+
+        if (count($row['Tardanza']) == 0) {
+            $row['Tardanza'][] = 0;
+        }
+
+        if (count($row['Ausente']) == 0) {
+            $row['Ausente'][] = 0;
+        }
+
+        if (count($row['Presente']) == 0) {
+            $row['Presente'][] = 0;
+        }
+
+        echo json_encode($row);
     }
 }

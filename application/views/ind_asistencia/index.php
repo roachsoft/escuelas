@@ -55,6 +55,7 @@
                         <div class="form-group">
                             <label for="selectMonth">Mes: </label>
                             <select class="form-control" id="select_mes">
+                                <option value="-">Todos los meses</option>
                                 <option value="1">Enero</option>
                                 <option value="2">Febrero</option>
                                 <option value="3">Marzo</option>
@@ -73,7 +74,7 @@
                             <label for="selectCurse">Grado / Curso: </label>
                             <select class="form-control" id="select_curso">
 
-
+                            <option value="-">Todos los cursos</option>
                                 <?php
                                 foreach ($cursos as $value) {
                                     ?>
@@ -141,32 +142,7 @@
 
 
         $('.dropdowns').multiselect({
-            buttonWidth: '100%',
-
-            // onChange: function(element, checked) {
-            //     var element1 = $('#select_periodo_lectivo option:selected');
-            //     var element2 = $('#select_mes option:selected');
-            //     var element3 = $('#select_actividad option:selected');
-            //     var element4 = $('#select_curso option:selected');
-                
-            //     $(element1).each(function(index, brand){
-            //         periodo.push($(this).val());
-            //     });
-
-            //     $(element2).each(function(index, brand){
-            //         mes.push($(this).val());
-            //     });
-
-            //     $(element3).each(function(index, brand){
-            //         periodo.push($(this).val());
-            //     });
-
-            //     $(element4).each(function(index, brand){
-            //         actividad.push([$(this).val()]);
-            //     });
-
-            //     console.log(periodo);
-            // }
+            buttonWidth: '100%'
         });
         var i;
 
@@ -187,6 +163,23 @@
         }
 
         $('#generar_grafico').on('click', function() {
+
+            var labels = [];
+            var name_of_curse = [];
+
+            if ($('#select_curso').val() === '-') {
+                
+                var x = document.getElementById('select_curso');
+                for (i = 0; i < x.length; i++) {
+                    if (i > 0) {
+                        labels.push(x.options[i].value);
+                        name_of_curse.push($("#select_curso option[value='"+i+"']").text());
+                    }
+                }
+            } else {
+                name_of_curse.push($("#select_curso option[value='"+$('#select_curso ').val()+"']").text());
+                labels.push($('#select_curso ').text());
+            }
             
             var url=base_url+'/ind_asist/getFilterIndAsistencia';
             var val_periodo_lectivo = [];
@@ -200,79 +193,97 @@
             dataFilter.actividad       = $('#select_actividad').val(); // getValueSelected('select_actividad');
             dataFilter.curso           = $('#select_curso').val(); // getValueSelected('select_curso');
 
+            var arrayPresentes = [];
+            var arrayAusentes  = [];
+            var arrayTardanza  = [];
+
             $.ajax({
-              type: "POST",
-              url: url,
-              data: dataFilter,
-              dataType: "JSON",
-              success: function(data) {
+                type: "POST",
+                url: url,
+                data: dataFilter,
+                dataType: "JSON",
+                success: function(data) {
                     console.log(data);
-              },
+                },
             });
+
+            // console.log('arrayPresentes : '+arrayPresentes);
+            // console.log('arrayAusentes : '+arrayAusentes);
+            // console.log('arrayTardanza : '+arrayTardanza);
+
+            var data = {
+            labels: name_of_curse,
+                datasets: [
+                    {
+                        label: "Indicador de asistencia",
+                        fillColor: "rgba(220,220,220,0.5)",
+                        strokeColor: "rgba(220,220,220,0.8)",
+                        highlightFill: "rgba(220,220,220,0.75)",
+                        highlightStroke: "rgba(220,220,220,1)",
+                        data: [1,1,1,1] // arrayPresentes
+                    },
+                    {
+                        label: "My Second dataset",
+                        fillColor: "rgba(151,187,205,0.5)",
+                        strokeColor: "rgba(151,187,205,0.8)",
+                        highlightFill: "rgba(151,187,205,0.75)",
+                        highlightStroke: "rgba(151,187,205,1)",
+                        data: [1,1,1,1] // arrayTardanza
+                    },
+                    {
+                        label: "My Second dataset",
+                        fillColor: "rgba(151,187,205,0.5)",
+                        strokeColor: "rgba(151,187,205,0.8)",
+                        highlightFill: "rgba(151,187,205,0.75)",
+                        highlightStroke: "rgba(151,187,205,1)",
+                        data: [1,1,1,1] // arrayAusentes
+                    }
+                ]
+            };
+
+            var options = {
+                //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
+                scaleBeginAtZero : true,
+
+                //Boolean - Whether grid lines are shown across the chart
+                scaleShowGridLines : true,
+
+                //String - Colour of the grid lines
+                scaleGridLineColor : "rgba(0,0,0,.05)",
+
+                //Number - Width of the grid lines
+                scaleGridLineWidth : 1,
+
+                //Boolean - Whether to show horizontal lines (except X axis)
+                scaleShowHorizontalLines: true,
+
+                //Boolean - Whether to show vertical lines (except Y axis)
+                scaleShowVerticalLines: true,
+
+                //Boolean - If there is a stroke on each bar
+                barShowStroke : true,
+
+                //Number - Pixel width of the bar stroke
+                barStrokeWidth : 2,
+
+                //Number - Spacing between each of the X value sets
+                barValueSpacing : 5,
+
+                //Number - Spacing between data sets within X values
+                barDatasetSpacing : 1,
+
+                //String - A legend template
+                legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].fillColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+
+            };
+
+            var myBarChart = new Chart(document.getElementById('myChart').getContext("2d")).Bar(data, options);
         });
 
     });
     
 
-    var data = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
-        datasets: [
-            {
-                label: "Indicador de asistencia",
-                fillColor: "rgba(220,220,220,0.5)",
-                strokeColor: "rgba(220,220,220,0.8)",
-                highlightFill: "rgba(220,220,220,0.75)",
-                highlightStroke: "rgba(220,220,220,1)",
-                data: [65, 59, 80, 81, 56, 55, 40]
-            },
-            {
-                label: "My Second dataset",
-                fillColor: "rgba(151,187,205,0.5)",
-                strokeColor: "rgba(151,187,205,0.8)",
-                highlightFill: "rgba(151,187,205,0.75)",
-                highlightStroke: "rgba(151,187,205,1)",
-                data: [28, 48, 40, 19, 86, 27, 90]
-            }
-        ]
-    };
-
-    var options = {
-        //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
-        scaleBeginAtZero : true,
-
-        //Boolean - Whether grid lines are shown across the chart
-        scaleShowGridLines : true,
-
-        //String - Colour of the grid lines
-        scaleGridLineColor : "rgba(0,0,0,.05)",
-
-        //Number - Width of the grid lines
-        scaleGridLineWidth : 1,
-
-        //Boolean - Whether to show horizontal lines (except X axis)
-        scaleShowHorizontalLines: true,
-
-        //Boolean - Whether to show vertical lines (except Y axis)
-        scaleShowVerticalLines: true,
-
-        //Boolean - If there is a stroke on each bar
-        barShowStroke : true,
-
-        //Number - Pixel width of the bar stroke
-        barStrokeWidth : 2,
-
-        //Number - Spacing between each of the X value sets
-        barValueSpacing : 5,
-
-        //Number - Spacing between data sets within X values
-        barDatasetSpacing : 1,
-
-        //String - A legend template
-        legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].fillColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
-
-    };
-
-    var myBarChart = new Chart(document.getElementById('myChart').getContext("2d")).Bar(data, options);
+    
 
 </script>
 </body>
