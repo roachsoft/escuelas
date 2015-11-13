@@ -39,7 +39,6 @@ Class Ind_asistModel extends CI_Model
 		$sql = <<<EOQ
 select tip_asist.tipasi_descripcion,
        inscrip.aul_id,
-       count(tip_asist.tipasi_descripcion),
        count(inscrip.aul_id)
   from asistencia asist
   join alumno alu

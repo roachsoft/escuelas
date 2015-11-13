@@ -134,33 +134,11 @@
     base_url = 'http://localhost/escuelas/index.php';
 
     $(document).ready(function() {
-        var periodo = [];
-        var mes = [];
-        var actividad = [];
-        var curso = [];
-
-
 
         $('.dropdowns').multiselect({
             buttonWidth: '100%'
         });
         var i;
-
-        var getValueSelected = function(elMultSelect) {
-            var txt=[];
-            console.log(elMultSelect);
-            var selectedOptionValue = $('#'+elMultSelect).val();
-            if (selectedOptionValue!== null) {
-                for (var i=0; i<selectedOptionValue.length; i++) {
-                    var val = selectedOptionValue[i]; 
-                    txt.push(selectedOptionValue[i]);
-                }
-            } else {
-                return null;
-            }
-
-            return txt;
-        }
 
         $('#generar_grafico').on('click', function() {
 
@@ -168,6 +146,14 @@
             var name_of_curse = [];
 
             if ($('#select_curso').val() === '-') {
+
+                $("#select_curso option").each(function()
+                {
+                    if ($(this).val() !== '-') {
+                        labels.push($(this).val());
+                        name_of_curse.push($(this).text());
+                    }
+                });
                 
                 var x = document.getElementById('select_curso');
                 for (i = 0; i < x.length; i++) {
@@ -197,22 +183,25 @@
             var arrayAusentes  = [];
             var arrayTardanza  = [];
 
+            var dataValues = {};
+
             $.ajax({
                 type: "POST",
                 url: url,
                 data: dataFilter,
                 dataType: "JSON",
                 success: function(data) {
-                    console.log(data);
+                    dataValues = data;
+                    console.log(dataValues.Presente);
                 },
             });
 
             // console.log('arrayPresentes : '+arrayPresentes);
             // console.log('arrayAusentes : '+arrayAusentes);
             // console.log('arrayTardanza : '+arrayTardanza);
-
+            console.log(labels);
             var data = {
-            labels: name_of_curse,
+            labels: labels,
                 datasets: [
                     {
                         label: "Indicador de asistencia",
@@ -220,7 +209,7 @@
                         strokeColor: "rgba(220,220,220,0.8)",
                         highlightFill: "rgba(220,220,220,0.75)",
                         highlightStroke: "rgba(220,220,220,1)",
-                        data: [1,1,1,1] // arrayPresentes
+                        data: dataValues.Presente // arrayPresentes
                     },
                     {
                         label: "My Second dataset",
@@ -228,7 +217,7 @@
                         strokeColor: "rgba(151,187,205,0.8)",
                         highlightFill: "rgba(151,187,205,0.75)",
                         highlightStroke: "rgba(151,187,205,1)",
-                        data: [1,1,1,1] // arrayTardanza
+                        data: dataValues.Tardanza // arrayTardanza
                     },
                     {
                         label: "My Second dataset",
@@ -236,14 +225,14 @@
                         strokeColor: "rgba(151,187,205,0.8)",
                         highlightFill: "rgba(151,187,205,0.75)",
                         highlightStroke: "rgba(151,187,205,1)",
-                        data: [1,1,1,1] // arrayAusentes
+                        data: dataValues.Ausente // arrayAusentes
                     }
                 ]
             };
 
             var options = {
                 //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
-                scaleBeginAtZero : true,
+                // scaleBeginAtZero : true,
 
                 //Boolean - Whether grid lines are shown across the chart
                 scaleShowGridLines : true,
@@ -258,7 +247,7 @@
                 scaleShowHorizontalLines: true,
 
                 //Boolean - Whether to show vertical lines (except Y axis)
-                scaleShowVerticalLines: true,
+                // scaleShowVerticalLines: true,
 
                 //Boolean - If there is a stroke on each bar
                 barShowStroke : true,

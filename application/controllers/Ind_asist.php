@@ -35,20 +35,29 @@ class Ind_asist extends CI_Controller {
         $row['Ausente'] = array();
         $row['Presente'] = array();
 
-        foreach ($data['totalRegistros'] as $value) {
-            $row[$value['tipasi_descripcion']][$value['aul_id']][] = $value['count'];
-        }
+        $cursos = $this->Ind_asistModel->getAllClassroom();
 
-        if (count($row['Tardanza']) == 0) {
-            $row['Tardanza'][] = 0;
-        }
+        foreach ($cursos as $value) {
 
-        if (count($row['Ausente']) == 0) {
-            $row['Ausente'][] = 0;
-        }
+            foreach ($data['totalRegistros'] as $key => $valueTotal) {
+                // echo "<pre>".print_r($valueTotal['tipasi_descripcion'], true)."</pre>";
 
-        if (count($row['Presente']) == 0) {
-            $row['Presente'][] = 0;
+                if ($value['id'] == $valueTotal['aul_id']) {
+                    array_push($row[$valueTotal['tipasi_descripcion']], $valueTotal['count']);
+                } else {
+                    array_push($row[$valueTotal['tipasi_descripcion']], 0);
+                }
+            }
+
+            if (!array_key_exists('Tardanza', $row['Tardanza'])) {
+                $row['Tardanza'][] = 0;
+            }
+            if (!array_key_exists('Ausente', $row['Ausente'])) {
+                $row['Ausente'][] = 0;
+            }
+            if (!array_key_exists('Presente', $row['Presente'])) {
+                $row['Presente'][] = 0;
+            }
         }
 
         echo json_encode($row);
