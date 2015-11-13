@@ -15,6 +15,7 @@ Class Ind_asistModel extends CI_Model
 		* 4	Otros
 		*/
 
+		$todosCursos = true;
 		$sqlMes = "";
 		$sqlPeriodo = "";
 		$sqlAula = "";
@@ -29,6 +30,7 @@ Class Ind_asistModel extends CI_Model
 		}
 
 		if (!empty($aula) && $aula != '-') {
+			$todosCursos = false;
 			$sqlAula = " AND inscrip.aul_id = ".$aula;
 		}
 
@@ -63,7 +65,11 @@ EOQ;
 		$data = $this->db->query($sql);
 		$data = $data->result_array();
 
-		return $data;
+		return (($todosCursos) 
+			? $data 
+			: (array_key_exists(0, $data) 
+				? ($data[0]) 
+				: $data[0] = array('tipasi_descripcion'=>'','aul_id' => $aula, 'count' => 0 )));
 
 	}
 

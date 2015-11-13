@@ -46,7 +46,7 @@
                                 <?php
                                 foreach ($periodos as $key => $value) {
                                     ?>
-                                    <option value="<?php echo $key;?>"><?php echo $value; ?></option>
+                                    <option value="<?php echo $value; ?>"><?php echo $value; ?></option>
                                     <?php
                                 }
                                 ?>
@@ -155,13 +155,6 @@
                     }
                 });
                 
-                var x = document.getElementById('select_curso');
-                for (i = 0; i < x.length; i++) {
-                    if (i > 0) {
-                        labels.push(x.options[i].value);
-                        name_of_curse.push($("#select_curso option[value='"+i+"']").text());
-                    }
-                }
             } else {
                 name_of_curse.push($("#select_curso option[value='"+$('#select_curso ').val()+"']").text());
                 labels.push($('#select_curso ').text());
@@ -179,63 +172,91 @@
             dataFilter.actividad       = $('#select_actividad').val(); // getValueSelected('select_actividad');
             dataFilter.curso           = $('#select_curso').val(); // getValueSelected('select_curso');
 
-            var arrayPresentes = [];
-            var arrayAusentes  = [];
-            var arrayTardanza  = [];
-
             var dataValues = {};
-
+            console.log('Choto : '+dataValues);
             $.ajax({
                 type: "POST",
                 url: url,
                 data: dataFilter,
                 dataType: "JSON",
                 success: function(data) {
+                    dataValues.splice(0, dataValues.length);
                     dataValues = data;
-                    console.log(dataValues.Presente);
+                    console.log('PutaMadres : '+data);
                 },
+                complete: function() {
+                    console.log('Puta : '+dataValues);
+                    var data = {
+                    labels: labels,
+                        datasets: [
+                            {
+                                label: "Indicador de asistencia",
+                                fillColor: "rgba(220,220,220,0.5)",
+                                strokeColor: "rgba(220,220,220,0.8)",
+                                highlightFill: "rgba(220,220,220,0.75)",
+                                highlightStroke: "rgba(220,220,220,1)",
+                                data: dataValues.Presente // arrayPresentes
+                            },
+                            {
+                                label: "My Second dataset",
+                                fillColor: "rgba(151,187,205,0.5)",
+                                strokeColor: "rgba(151,187,205,0.8)",
+                                highlightFill: "rgba(151,187,205,0.75)",
+                                highlightStroke: "rgba(151,187,205,1)",
+                                data: dataValues.Tardanza // arrayTardanza
+                            },
+                            {
+                                label: "My Second dataset",
+                                fillColor: "rgba(151,187,205,0.5)",
+                                strokeColor: "rgba(151,187,205,0.8)",
+                                highlightFill: "rgba(151,187,205,0.75)",
+                                highlightStroke: "rgba(151,187,205,1)",
+                                data: dataValues.Ausente // arrayAusentes
+                            }
+                        ]
+                    };
+
+                    var myBarChart = new Chart(document.getElementById('myChart').getContext("2d")).Bar(data, options);
+                    myBarChart.update();
+                }
             });
 
-            // console.log('arrayPresentes : '+arrayPresentes);
-            // console.log('arrayAusentes : '+arrayAusentes);
-            // console.log('arrayTardanza : '+arrayTardanza);
-            console.log(labels);
-            var data = {
-            labels: labels,
-                datasets: [
-                    {
-                        label: "Indicador de asistencia",
-                        fillColor: "rgba(220,220,220,0.5)",
-                        strokeColor: "rgba(220,220,220,0.8)",
-                        highlightFill: "rgba(220,220,220,0.75)",
-                        highlightStroke: "rgba(220,220,220,1)",
-                        data: dataValues.Presente // arrayPresentes
-                    },
-                    {
-                        label: "My Second dataset",
-                        fillColor: "rgba(151,187,205,0.5)",
-                        strokeColor: "rgba(151,187,205,0.8)",
-                        highlightFill: "rgba(151,187,205,0.75)",
-                        highlightStroke: "rgba(151,187,205,1)",
-                        data: dataValues.Tardanza // arrayTardanza
-                    },
-                    {
-                        label: "My Second dataset",
-                        fillColor: "rgba(151,187,205,0.5)",
-                        strokeColor: "rgba(151,187,205,0.8)",
-                        highlightFill: "rgba(151,187,205,0.75)",
-                        highlightStroke: "rgba(151,187,205,1)",
-                        data: dataValues.Ausente // arrayAusentes
-                    }
-                ]
-            };
-
             var options = {
-                //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
-                // scaleBeginAtZero : true,
+                // Boolean - If we should show the scale at all
+                showScale: true,
 
-                //Boolean - Whether grid lines are shown across the chart
-                scaleShowGridLines : true,
+                // Boolean - If we want to override with a hard coded scale
+                scaleOverride: false,
+
+                // ** Required if scaleOverride is true **
+                // Number - The number of steps in a hard coded scale
+                scaleSteps: 5,
+                // Number - The value jump in the hard coded scale
+                scaleStepWidth: 5,
+                // Number - The scale starting value
+                scaleStartValue: 0,
+
+                // String - Colour of the scale line
+                scaleLineColor: "rgba(0,0,0,.1)",
+
+                // Number - Pixel width of the scale line
+                scaleLineWidth: 1,
+
+                // Boolean - Whether to show labels on the scale
+                scaleShowLabels: true,
+
+                // Interpolated JS string - can access value
+                scaleLabel: "<%=value%>",
+
+                // Boolean - Whether the scale should stick to integers, not floats even if drawing space is there
+                scaleIntegersOnly: true,
+
+                // Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
+                scaleBeginAtZero: false,
+
+                // String - Scale label font declaration for the scale label
+                scaleFontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+
 
                 //String - Colour of the grid lines
                 scaleGridLineColor : "rgba(0,0,0,.05)",
@@ -266,7 +287,7 @@
 
             };
 
-            var myBarChart = new Chart(document.getElementById('myChart').getContext("2d")).Bar(data, options);
+            
         });
 
     });

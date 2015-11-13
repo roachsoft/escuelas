@@ -26,40 +26,56 @@ class Ind_asist extends CI_Controller {
         $aula=$_POST['curso'];
         $actividad=$_POST['actividad'];
 
-        $totalAusentes = 0;
-        $totalPresente = 0;
-        $totalTardanza = 0;
-
         $data['totalRegistros'] = $this->Ind_asistModel->totalRegistros($mes, $periodo, $aula, $actividad);
-        $row['Tardanza'] = array();
-        $row['Ausente'] = array();
-        $row['Presente'] = array();
 
+        $result = array(
+            'Presente' => array(),
+            'Ausente'  => array(),
+            'Tardanza' => array()
+        );
+        echo "Aula : ".$aula;
         $cursos = $this->Ind_asistModel->getAllClassroom();
+        $i = 0;
 
-        foreach ($cursos as $value) {
-
-            foreach ($data['totalRegistros'] as $key => $valueTotal) {
-                // echo "<pre>".print_r($valueTotal['tipasi_descripcion'], true)."</pre>";
-
-                if ($value['id'] == $valueTotal['aul_id']) {
-                    array_push($row[$valueTotal['tipasi_descripcion']], $valueTotal['count']);
-                } else {
-                    array_push($row[$valueTotal['tipasi_descripcion']], 0);
-                }
+        if ($aula === '-') {
+            foreach ($cursos as $value) {
+                $row = $this->getValuesByCurse($data['totalRegistros'], $value['id']);
+                $this->getPercentByCurse($result, $row);
             }
+        } else {
+            $row = $this->getValuesByCurse($data['totalRegistros'], $value['id']);
 
-            if (!array_key_exists('Tardanza', $row['Tardanza'])) {
-                $row['Tardanza'][] = 0;
-            }
-            if (!array_key_exists('Ausente', $row['Ausente'])) {
-                $row['Ausente'][] = 0;
-            }
-            if (!array_key_exists('Presente', $row['Presente'])) {
-                $row['Presente'][] = 0;
+            $this->getPercentByCurse($row);
+        }
+        echo print_r($result, true);
+        echo json_encode($result);
+    }
+
+    public function getValuesByCurse(&$totalRegistros, &$id)
+    {
+        $row['Tardanza'] = 0;
+        $row['Ausente']  = 0;
+        $row['Presente'] = 0;
+        
+        foreach ($totalRegistros as $key => $valueTotal) {
+
+            if ($id == $valueTotal['aul_id']) {
+                $row[$valueTotal['tipasi_descripcion']] = $valueTotal['count'];
             }
         }
 
-        echo json_encode($row);
+        return $row;
+    }
+
+    public function getPercentByCurse(&$result, $row)
+    {
+        $totalAlumnCurso = 0;
+        $totalAlumnCurso = $row['Presente']+$row['Tardanza']+$row['Ausente'];
+
+        array_push($result['Presente'], ($totalAlumnCurso > 0) ? round(($row['Presente'] * 100/$totalAlumnCurso), 2) : 0);
+        array_push($result['Tardanza'], ($totalAlumnCurso > 0) ? round(($row['Tardanza'] * 100/$totalAlumnCurso), 2) : 0);
+        array_push($result['Ausente'],  ($totalAlumnCurso > 0) ? round(($row['Ausente']  * 100/$totalAlumnCurso), 2) : 0);
+
+        // return $result;
     }
 }
