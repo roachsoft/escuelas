@@ -33,7 +33,7 @@ class Ind_asist extends CI_Controller {
             'Ausente'  => array(),
             'Tardanza' => array()
         );
-        echo "Aula : ".$aula;
+
         $cursos = $this->Ind_asistModel->getAllClassroom();
         $i = 0;
 
@@ -43,11 +43,11 @@ class Ind_asist extends CI_Controller {
                 $this->getPercentByCurse($result, $row);
             }
         } else {
-            $row = $this->getValuesByCurse($data['totalRegistros'], $value['id']);
+            $row = $this->getValuesByCurse($data['totalRegistros'], $aula);
 
-            $this->getPercentByCurse($row);
+            $this->getPercentByCurse($result, $row);
         }
-        echo print_r($result, true);
+
         echo json_encode($result);
     }
 
@@ -58,7 +58,7 @@ class Ind_asist extends CI_Controller {
         $row['Presente'] = 0;
         
         foreach ($totalRegistros as $key => $valueTotal) {
-
+            
             if ($id == $valueTotal['aul_id']) {
                 $row[$valueTotal['tipasi_descripcion']] = $valueTotal['count'];
             }
@@ -76,6 +76,5 @@ class Ind_asist extends CI_Controller {
         array_push($result['Tardanza'], ($totalAlumnCurso > 0) ? round(($row['Tardanza'] * 100/$totalAlumnCurso), 2) : 0);
         array_push($result['Ausente'],  ($totalAlumnCurso > 0) ? round(($row['Ausente']  * 100/$totalAlumnCurso), 2) : 0);
 
-        // return $result;
     }
 }

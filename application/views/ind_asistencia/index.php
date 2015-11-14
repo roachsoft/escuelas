@@ -157,7 +157,7 @@
                 
             } else {
                 name_of_curse.push($("#select_curso option[value='"+$('#select_curso ').val()+"']").text());
-                labels.push($('#select_curso ').text());
+                labels.push($('#select_curso').val());
             }
             
             var url=base_url+'/ind_asist/getFilterIndAsistencia';
@@ -173,19 +173,22 @@
             dataFilter.curso           = $('#select_curso').val(); // getValueSelected('select_curso');
 
             var dataValues = {};
-            console.log('Choto : '+dataValues);
+
             $.ajax({
                 type: "POST",
                 url: url,
                 data: dataFilter,
                 dataType: "JSON",
+                before: function(){
+                    if (dataVAlues.length > 0) {
+                        dataValues.splice(0, dataValues.length);
+                    }
+                },
                 success: function(data) {
-                    dataValues.splice(0, dataValues.length);
                     dataValues = data;
-                    console.log('PutaMadres : '+data);
                 },
                 complete: function() {
-                    console.log('Puta : '+dataValues);
+                    
                     var data = {
                     labels: labels,
                         datasets: [
@@ -195,7 +198,7 @@
                                 strokeColor: "rgba(220,220,220,0.8)",
                                 highlightFill: "rgba(220,220,220,0.75)",
                                 highlightStroke: "rgba(220,220,220,1)",
-                                data: dataValues.Presente // arrayPresentes
+                                data: dataValues.Presente
                             },
                             {
                                 label: "My Second dataset",
@@ -203,7 +206,7 @@
                                 strokeColor: "rgba(151,187,205,0.8)",
                                 highlightFill: "rgba(151,187,205,0.75)",
                                 highlightStroke: "rgba(151,187,205,1)",
-                                data: dataValues.Tardanza // arrayTardanza
+                                data: dataValues.Tardanza
                             },
                             {
                                 label: "My Second dataset",
@@ -211,7 +214,7 @@
                                 strokeColor: "rgba(151,187,205,0.8)",
                                 highlightFill: "rgba(151,187,205,0.75)",
                                 highlightStroke: "rgba(151,187,205,1)",
-                                data: dataValues.Ausente // arrayAusentes
+                                data: dataValues.Ausente
                             }
                         ]
                     };

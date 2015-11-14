@@ -65,12 +65,7 @@ EOQ;
 		$data = $this->db->query($sql);
 		$data = $data->result_array();
 
-		return (($todosCursos) 
-			? $data 
-			: (array_key_exists(0, $data) 
-				? ($data[0]) 
-				: $data[0] = array('tipasi_descripcion'=>'','aul_id' => $aula, 'count' => 0 )));
-
+		return $data;
 	}
 
 	public function getAllPeriods()
