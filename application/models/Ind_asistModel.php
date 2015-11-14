@@ -15,6 +15,7 @@ Class Ind_asistModel extends CI_Model
 		* 4	Otros
 		*/
 
+		$todosCursos = true;
 		$sqlMes = "";
 		$sqlPeriodo = "";
 		$sqlAula = "";
@@ -29,6 +30,7 @@ Class Ind_asistModel extends CI_Model
 		}
 
 		if (!empty($aula) && $aula != '-') {
+			$todosCursos = false;
 			$sqlAula = " AND inscrip.aul_id = ".$aula;
 		}
 
@@ -39,7 +41,6 @@ Class Ind_asistModel extends CI_Model
 		$sql = <<<EOQ
 select tip_asist.tipasi_descripcion,
        inscrip.aul_id,
-       count(tip_asist.tipasi_descripcion),
        count(inscrip.aul_id)
   from asistencia asist
   join alumno alu
@@ -65,7 +66,6 @@ EOQ;
 		$data = $data->result_array();
 
 		return $data;
-
 	}
 
 	public function getAllPeriods()

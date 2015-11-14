@@ -26,31 +26,55 @@ class Ind_asist extends CI_Controller {
         $aula=$_POST['curso'];
         $actividad=$_POST['actividad'];
 
-        $totalAusentes = 0;
-        $totalPresente = 0;
-        $totalTardanza = 0;
-
         $data['totalRegistros'] = $this->Ind_asistModel->totalRegistros($mes, $periodo, $aula, $actividad);
-        $row['Tardanza'] = array();
-        $row['Ausente'] = array();
-        $row['Presente'] = array();
 
-        foreach ($data['totalRegistros'] as $value) {
-            $row[$value['tipasi_descripcion']][$value['aul_id']][] = $value['count'];
+        $result = array(
+            'Presente' => array(),
+            'Ausente'  => array(),
+            'Tardanza' => array()
+        );
+
+        $cursos = $this->Ind_asistModel->getAllClassroom();
+        $i = 0;
+
+        if ($aula === '-') {
+            foreach ($cursos as $value) {
+                $row = $this->getValuesByCurse($data['totalRegistros'], $value['id']);
+                $this->getPercentByCurse($result, $row);
+            }
+        } else {
+            $row = $this->getValuesByCurse($data['totalRegistros'], $aula);
+
+            $this->getPercentByCurse($result, $row);
         }
 
-        if (count($row['Tardanza']) == 0) {
-            $row['Tardanza'][] = 0;
+        echo json_encode($result);
+    }
+
+    public function getValuesByCurse(&$totalRegistros, &$id)
+    {
+        $row['Tardanza'] = 0;
+        $row['Ausente']  = 0;
+        $row['Presente'] = 0;
+        
+        foreach ($totalRegistros as $key => $valueTotal) {
+            
+            if ($id == $valueTotal['aul_id']) {
+                $row[$valueTotal['tipasi_descripcion']] = $valueTotal['count'];
+            }
         }
 
-        if (count($row['Ausente']) == 0) {
-            $row['Ausente'][] = 0;
-        }
+        return $row;
+    }
 
-        if (count($row['Presente']) == 0) {
-            $row['Presente'][] = 0;
-        }
+    public function getPercentByCurse(&$result, $row)
+    {
+        $totalAlumnCurso = 0;
+        $totalAlumnCurso = $row['Presente']+$row['Tardanza']+$row['Ausente'];
 
-        echo json_encode($row);
+        array_push($result['Presente'], ($totalAlumnCurso > 0) ? round(($row['Presente'] * 100/$totalAlumnCurso), 2) : 0);
+        array_push($result['Tardanza'], ($totalAlumnCurso > 0) ? round(($row['Tardanza'] * 100/$totalAlumnCurso), 2) : 0);
+        array_push($result['Ausente'],  ($totalAlumnCurso > 0) ? round(($row['Ausente']  * 100/$totalAlumnCurso), 2) : 0);
+
     }
 }
