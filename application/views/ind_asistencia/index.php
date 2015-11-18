@@ -10,12 +10,12 @@
     <title>Bienvenido</title>
 
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+    <link rel="stylesheet" href="http://localhost/escuelas/assets/bootstrap/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
 
     <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
+    <link rel="stylesheet" href="http://localhost/escuelas/assets/bootstrap/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="http://localhost/escuelas/assets/js/bootstrap-multiselect/dist/css/bootstrap-multiselect.css">
+    <!-- <link rel="stylesheet" href="http://localhost/escuelas/assets/js/bootstrap-multiselect/dist/css/bootstrap-multiselect.css"> -->
 
     <style type="text/css">
         .multiselect.dropdown-toggle.btn.btn-default > div.restricted {
@@ -118,15 +118,14 @@
     </div>
 </div>
 
-<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script src="http://localhost/escuelas/assets/js/jquery/jquery-1.11.3.min.js"></script>
 
 <!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+<script src="http://localhost/escuelas/assets/bootstrap/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+<script type="text/javascript" src="http://localhost/escuelas/assets/js/chartjs/Chart.min.js"></script>
 
-<script type="text/javascript" src="http://localhost/escuelas/assets/js/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script>
+<!-- <script type="text/javascript" src="http://localhost/escuelas/assets/js/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script> -->
 
 
 
@@ -135,9 +134,9 @@
 
     $(document).ready(function() {
 
-        $('.dropdowns').multiselect({
-            buttonWidth: '100%'
-        });
+        // $('.dropdowns').multiselect({
+        //     buttonWidth: '100%'
+        // });
         var i;
 
         $('#generar_grafico').on('click', function() {
