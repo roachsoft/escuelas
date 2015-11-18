@@ -10,12 +10,12 @@
     <title>Bienvenido</title>
 
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="http://localhost/escuelas/assets/bootstrap/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+    <link rel="stylesheet" href="<?php echo base_url();?>assets/bootstrap/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
 
     <!-- Optional theme -->
-    <link rel="stylesheet" href="http://localhost/escuelas/assets/bootstrap/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
+    <link rel="stylesheet" href="<?php echo base_url();?>assets/bootstrap/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
 
-    <!-- <link rel="stylesheet" href="http://localhost/escuelas/assets/js/bootstrap-multiselect/dist/css/bootstrap-multiselect.css"> -->
+    <!-- <link rel="stylesheet" href="<?php echo base_url();?>assets/js/bootstrap-multiselect/dist/css/bootstrap-multiselect.css"> -->
 
     <style type="text/css">
         .multiselect.dropdown-toggle.btn.btn-default > div.restricted {
@@ -118,19 +118,19 @@
     </div>
 </div>
 
-<script src="http://localhost/escuelas/assets/js/jquery/jquery-1.11.3.min.js"></script>
+<script src="<?php echo base_url();?>assets/js/jquery/jquery-1.11.3.min.js"></script>
 
 <!-- Latest compiled and minified JavaScript -->
-<script src="http://localhost/escuelas/assets/bootstrap/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+<script src="<?php echo base_url();?>assets/bootstrap/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
 
-<script type="text/javascript" src="http://localhost/escuelas/assets/js/chartjs/Chart.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/chartjs/Chart.min.js"></script>
 
-<!-- <script type="text/javascript" src="http://localhost/escuelas/assets/js/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script> -->
+<!-- <script type="text/javascript" src="<?php echo base_url();?>assets/js/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script> -->
 
 
 
 <script type="text/javascript">
-    base_url = 'http://localhost/escuelas/index.php';
+    base_url = '<?php echo base_url();?>index.php';
 
     $(document).ready(function() {
 
