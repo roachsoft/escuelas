@@ -7,6 +7,7 @@ class Ind_asist extends CI_Controller {
     {
         parent::__construct();
         $this->load->model('Ind_asistModel');
+        $this->load->helper('url');
     }
 
     function index()
