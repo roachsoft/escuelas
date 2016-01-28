@@ -156,7 +156,7 @@
                 
             } else {
                 name_of_curse.push($("#select_curso option[value='"+$('#select_curso ').val()+"']").text());
-                labels.push($('#select_curso').val());
+                labels.push('AULA_'+$('#select_curso').val());
             }
             
             var url=base_url+'/ind_asist/getFilterIndAsistencia';
@@ -192,26 +192,26 @@
                     labels: labels,
                         datasets: [
                             {
-                                label: "Indicador de asistencia",
-                                fillColor: "rgba(220,220,220,0.5)",
-                                strokeColor: "rgba(220,220,220,0.8)",
-                                highlightFill: "rgba(220,220,220,0.75)",
+                                label: "Presente",
+                                fillColor: "rgba(52,157,74,0.5)",
+                                strokeColor: "rgba(52,157,74,0.8)",
+                                highlightFill: "rgba(52,157,74,0.75)",
                                 highlightStroke: "rgba(220,220,220,1)",
                                 data: dataValues.Presente
                             },
                             {
-                                label: "My Second dataset",
-                                fillColor: "rgba(151,187,205,0.5)",
-                                strokeColor: "rgba(151,187,205,0.8)",
-                                highlightFill: "rgba(151,187,205,0.75)",
+                                label: "Tardanza", 
+                                fillColor: "rgba(223,248,8,0.5)",
+                                strokeColor: "rgba(223,248,8,0.8)",
+                                highlightFill: "rgba(223,248,8,0.75)",
                                 highlightStroke: "rgba(151,187,205,1)",
                                 data: dataValues.Tardanza
                             },
                             {
-                                label: "My Second dataset",
-                                fillColor: "rgba(151,187,205,0.5)",
-                                strokeColor: "rgba(151,187,205,0.8)",
-                                highlightFill: "rgba(151,187,205,0.75)",
+                                label: "Ausente",
+                                fillColor: "rgba(232,8,8,0.5)",
+                                strokeColor: "rgba(232,8,8,0.8)",
+                                highlightFill: "rgba(232,8,8,0.75)",
                                 highlightStroke: "rgba(151,187,205,1)",
                                 data: dataValues.Ausente
                             }
@@ -219,7 +219,7 @@
                     };
 
                     var myBarChart = new Chart(document.getElementById('myChart').getContext("2d")).Bar(data, options);
-                    myBarChart.update();
+
                 }
             });
 
@@ -254,7 +254,7 @@
                 scaleIntegersOnly: true,
 
                 // Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
-                scaleBeginAtZero: false,
+                scaleBeginAtZero: true,
 
                 // String - Scale label font declaration for the scale label
                 scaleFontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
@@ -283,6 +283,9 @@
 
                 //Number - Spacing between data sets within X values
                 barDatasetSpacing : 1,
+
+                multiTooltipTemplate : "<%= datasetLabel %>: <%= value %>",
+                responsive : false,
 
                 //String - A legend template
                 legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].fillColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
